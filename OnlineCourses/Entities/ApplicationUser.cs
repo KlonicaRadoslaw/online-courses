@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineCourses.Entities
 {
@@ -18,5 +19,8 @@ namespace OnlineCourses.Entities
         public string Address2 { get; set; }
         [StringLength(50)]
         public string PostCode { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual ICollection<UserCategory> UserCategory { get; set; }
     }
 }
