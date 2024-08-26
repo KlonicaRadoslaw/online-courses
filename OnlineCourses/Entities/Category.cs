@@ -16,9 +16,9 @@ namespace OnlineCourses.Entities
         public string ThumbnailImagePath { get; set; }
 
         [ForeignKey("CategoryId")]
-        public ICollection<CategoryItem> CategoryItems { get; set; }
+        public ICollection<CategoryItem>? CategoryItems { get; set; }
 
         [ForeignKey("CategoryId")]
-        public virtual ICollection<UserCategory> UserCategory { get; set; }
+        public virtual ICollection<UserCategory>? UserCategory { get; set; }
     }
 }

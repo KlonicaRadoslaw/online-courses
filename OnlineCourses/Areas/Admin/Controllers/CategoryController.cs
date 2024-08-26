@@ -7,37 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineCourses.Data;
 using OnlineCourses.Entities;
+using OnlineCourses.Interfaces;
+
 
 namespace OnlineCourses.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(ApplicationDbContext context, ICategoryRepository categoryRepository)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
         }
 
         // GET: Admin/Category
         public async Task<IActionResult> Index()
         {
-              return _context.Category != null ? 
-                          View(await _context.Category.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Category'  is null.");
+            var categories = await _categoryRepository.GetAll();
+            return categories != null ? View(categories) : Problem("Entity set 'ApplicationDbContext.Category' is null.");
         }
 
         // GET: Admin/Category/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null || _context.Category == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Category
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var category = await _categoryRepository.GetById(id);
             if (category == null)
             {
                 return NotFound();
@@ -61,22 +56,16 @@ namespace OnlineCourses.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(category);
-                await _context.SaveChangesAsync();
+                _categoryRepository.Add(category);
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
 
         // GET: Admin/Category/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.Category == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Category.FindAsync(id);
+            var category = await _categoryRepository.GetById(id);
             if (category == null)
             {
                 return NotFound();
@@ -100,12 +89,11 @@ namespace OnlineCourses.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(category);
-                    await _context.SaveChangesAsync();
+                    _categoryRepository.Update(category);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
+                    if (!_categoryRepository.DoesExist(category.Id))
                     {
                         return NotFound();
                     }
@@ -120,15 +108,10 @@ namespace OnlineCourses.Areas.Admin.Controllers
         }
 
         // GET: Admin/Category/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null || _context.Category == null)
-            {
-                return NotFound();
-            }
+            var category = await _categoryRepository.GetById(id);
 
-            var category = await _context.Category
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {
                 return NotFound();
@@ -142,23 +125,14 @@ namespace OnlineCourses.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Category == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Category'  is null.");
-            }
-            var category = await _context.Category.FindAsync(id);
+            var category = await _categoryRepository.GetById(id);
+
             if (category != null)
             {
-                _context.Category.Remove(category);
+                _categoryRepository.Delete(category);
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool CategoryExists(int id)
-        {
-          return (_context.Category?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
