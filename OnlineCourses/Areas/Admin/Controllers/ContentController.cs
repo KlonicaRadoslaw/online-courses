@@ -7,37 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineCourses.Data;
 using OnlineCourses.Entities;
+using OnlineCourses.Interfaces;
+using OnlineCourses.Repositories;
 
 namespace OnlineCourses.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ContentController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IContentRepository _contentRepository;
 
-        public ContentController(ApplicationDbContext context)
+        public ContentController(IContentRepository contentRepository)
         {
-            _context = context;
+            _contentRepository = contentRepository;
         }
 
         // GET: Admin/Content
         public async Task<IActionResult> Index()
         {
-              return _context.Content != null ? 
-                          View(await _context.Content.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Content'  is null.");
+            var content = await _contentRepository.GetAll();
+            return content != null ? View(content) : Problem("Entity set 'ApplicationDbContext.Content' is null.");
         }
 
         // GET: Admin/Content/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null || _context.Content == null)
-            {
-                return NotFound();
-            }
-
-            var content = await _context.Content
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var content = await _contentRepository.GetById(id);
             if (content == null)
             {
                 return NotFound();
@@ -61,22 +56,16 @@ namespace OnlineCourses.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(content);
-                await _context.SaveChangesAsync();
+                _contentRepository.Add(content);
                 return RedirectToAction(nameof(Index));
             }
             return View(content);
         }
 
         // GET: Admin/Content/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.Content == null)
-            {
-                return NotFound();
-            }
-
-            var content = await _context.Content.FindAsync(id);
+            var content = await _contentRepository.GetById(id);
             if (content == null)
             {
                 return NotFound();
@@ -100,12 +89,11 @@ namespace OnlineCourses.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(content);
-                    await _context.SaveChangesAsync();
+                    _contentRepository.Update(content);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ContentExists(content.Id))
+                    if (!_contentRepository.DoesExist(content.Id))
                     {
                         return NotFound();
                     }
@@ -120,15 +108,10 @@ namespace OnlineCourses.Areas.Admin.Controllers
         }
 
         // GET: Admin/Content/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null || _context.Content == null)
-            {
-                return NotFound();
-            }
+            var content = await _contentRepository.GetById(id);
 
-            var content = await _context.Content
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (content == null)
             {
                 return NotFound();
@@ -142,23 +125,14 @@ namespace OnlineCourses.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Content == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Content'  is null.");
-            }
-            var content = await _context.Content.FindAsync(id);
+            var content = await _contentRepository.GetById(id);
+
             if (content != null)
             {
-                _context.Content.Remove(content);
+                _contentRepository.Delete(content);
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool ContentExists(int id)
-        {
-          return (_context.Content?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
