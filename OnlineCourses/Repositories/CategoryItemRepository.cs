@@ -35,6 +35,27 @@ namespace OnlineCourses.Repositories
             return await _context.CategoryItem.ToListAsync();
         }
 
+        public async Task<IEnumerable<CategoryItem>> GetAll(int categoryId)
+        {
+            var list = await(from catItem in _context.CategoryItem
+                             where catItem.CategoryId == categoryId
+                             select new CategoryItem
+                             {
+                                 Id = catItem.Id,
+                                 Title = catItem.Title,
+                                 Description = catItem.Description,
+                                 DateTimeItemReleased = catItem.DateTimeItemReleased,
+                                 MediaTypeId = catItem.MediaTypeId,
+                                 CategoryId = categoryId
+                             }).ToListAsync();
+            return list;
+        }
+
+        private object await(IQueryable<object> queryable)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<CategoryItem> GetById(int id)
         {
             return await _context.CategoryItem

@@ -23,9 +23,9 @@ namespace OnlineCourses.Areas.Admin.Controllers
         }
 
         // GET: Admin/CategoryItem
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int categoryId)
         {
-            var categoryItems = await _categoryItemRepository.GetAll();
+            var categoryItems = await _categoryItemRepository.GetAll(categoryId);
             return categoryItems != null ? View(categoryItems) : Problem("Entity set 'ApplicationDbContext.CategoryItem' is null.");
         }
 
