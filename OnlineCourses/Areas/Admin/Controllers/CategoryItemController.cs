@@ -7,37 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineCourses.Data;
 using OnlineCourses.Entities;
+using OnlineCourses.Interfaces;
+using OnlineCourses.Repositories;
 
 namespace OnlineCourses.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class CategoryItemController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICategoryItemRepository _categoryItemRepository;
 
-        public CategoryItemController(ApplicationDbContext context)
+        public CategoryItemController(ICategoryItemRepository categoryItemRepository)
         {
-            _context = context;
+            _categoryItemRepository = categoryItemRepository;
         }
 
         // GET: Admin/CategoryItem
         public async Task<IActionResult> Index()
         {
-              return _context.CategoryItem != null ? 
-                          View(await _context.CategoryItem.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.CategoryItem'  is null.");
+            var categoryItems = await _categoryItemRepository.GetAll();
+            return categoryItems != null ? View(categoryItems) : Problem("Entity set 'ApplicationDbContext.CategoryItem' is null.");
         }
 
         // GET: Admin/CategoryItem/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null || _context.CategoryItem == null)
-            {
-                return NotFound();
-            }
-
-            var categoryItem = await _context.CategoryItem
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var categoryItem = await _categoryItemRepository.GetById(id);
             if (categoryItem == null)
             {
                 return NotFound();
@@ -61,22 +56,16 @@ namespace OnlineCourses.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(categoryItem);
-                await _context.SaveChangesAsync();
+                _categoryItemRepository.Add(categoryItem);
                 return RedirectToAction(nameof(Index));
             }
             return View(categoryItem);
         }
 
         // GET: Admin/CategoryItem/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.CategoryItem == null)
-            {
-                return NotFound();
-            }
-
-            var categoryItem = await _context.CategoryItem.FindAsync(id);
+            var categoryItem = await _categoryItemRepository.GetById(id);
             if (categoryItem == null)
             {
                 return NotFound();
@@ -100,12 +89,11 @@ namespace OnlineCourses.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(categoryItem);
-                    await _context.SaveChangesAsync();
+                    _categoryItemRepository.Update(categoryItem);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryItemExists(categoryItem.Id))
+                    if (!_categoryItemRepository.DoesExist(categoryItem.Id))
                     {
                         return NotFound();
                     }
@@ -120,15 +108,10 @@ namespace OnlineCourses.Areas.Admin.Controllers
         }
 
         // GET: Admin/CategoryItem/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null || _context.CategoryItem == null)
-            {
-                return NotFound();
-            }
+            var categoryItem = await _categoryItemRepository.GetById(id);
 
-            var categoryItem = await _context.CategoryItem
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (categoryItem == null)
             {
                 return NotFound();
@@ -142,23 +125,14 @@ namespace OnlineCourses.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.CategoryItem == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.CategoryItem'  is null.");
-            }
-            var categoryItem = await _context.CategoryItem.FindAsync(id);
+            var categoryItem = await _categoryItemRepository.GetById(id);
+
             if (categoryItem != null)
             {
-                _context.CategoryItem.Remove(categoryItem);
+                _categoryItemRepository.Delete(categoryItem);
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool CategoryItemExists(int id)
-        {
-          return (_context.CategoryItem?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
