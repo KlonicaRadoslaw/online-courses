@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineCourses.Data;
 using OnlineCourses.Entities;
+using OnlineCourses.Extensions;
 using OnlineCourses.Interfaces;
 using OnlineCourses.Repositories;
 
@@ -16,16 +17,21 @@ namespace OnlineCourses.Areas.Admin.Controllers
     public class CategoryItemController : Controller
     {
         private readonly ICategoryItemRepository _categoryItemRepository;
+        private readonly IMediaTypeRepository _mediaTypeRepository;
 
-        public CategoryItemController(ICategoryItemRepository categoryItemRepository)
+        public CategoryItemController(ICategoryItemRepository categoryItemRepository, IMediaTypeRepository mediaTypeRepository)
         {
             _categoryItemRepository = categoryItemRepository;
+            _mediaTypeRepository = mediaTypeRepository;
         }
 
         // GET: Admin/CategoryItem
         public async Task<IActionResult> Index(int categoryId)
         {
             var categoryItems = await _categoryItemRepository.GetAll(categoryId);
+
+            ViewBag.CategoryId = categoryId;
+
             return categoryItems != null ? View(categoryItems) : Problem("Entity set 'ApplicationDbContext.CategoryItem' is null.");
         }
 
@@ -42,9 +48,17 @@ namespace OnlineCourses.Areas.Admin.Controllers
         }
 
         // GET: Admin/CategoryItem/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int categoryId)
         {
-            return View();
+            var mediaTypes = await _mediaTypeRepository.GetAll();
+
+            var categoryItem = new CategoryItem
+            {
+                CategoryId = categoryId,
+                MediaTypes = mediaTypes.ConvertToSelectList(0)
+            };
+
+            return View(categoryItem);
         }
 
         // POST: Admin/CategoryItem/Create
@@ -57,7 +71,7 @@ namespace OnlineCourses.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _categoryItemRepository.Add(categoryItem);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new {categoryId  = categoryItem.CategoryId});
             }
             return View(categoryItem);
         }

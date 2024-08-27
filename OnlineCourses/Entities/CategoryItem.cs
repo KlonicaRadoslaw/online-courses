@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,7 +17,8 @@ namespace OnlineCourses.Entities
         public int MediaTypeId { get; set; }
 
         [NotMapped]
-        public virtual ICollection<SelectListItem> MediaTypes { get; set; }
+        [BindNever]
+        public virtual ICollection<SelectListItem>? MediaTypes { get; set; }
         public DateTime DateTimeItemReleased { get; set; }
     }
 }
