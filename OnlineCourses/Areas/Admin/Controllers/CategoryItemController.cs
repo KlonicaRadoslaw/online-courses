@@ -84,6 +84,11 @@ namespace OnlineCourses.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
+            var mediaTypes = await _mediaTypeRepository.GetAll();
+
+            categoryItem.MediaTypes = mediaTypes.ConvertToSelectList(categoryItem.MediaTypeId);
+
             return View(categoryItem);
         }
 
@@ -116,7 +121,7 @@ namespace OnlineCourses.Areas.Admin.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { categoryId = categoryItem.CategoryId });
             }
             return View(categoryItem);
         }
@@ -146,7 +151,7 @@ namespace OnlineCourses.Areas.Admin.Controllers
                 _categoryItemRepository.Delete(categoryItem);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { categoryId = categoryItem.CategoryId });
         }
     }
 }
