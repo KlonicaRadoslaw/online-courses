@@ -51,11 +51,6 @@ namespace OnlineCourses.Repositories
             return list;
         }
 
-        private object await(IQueryable<object> queryable)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<CategoryItem> GetById(int id)
         {
             return await _context.CategoryItem

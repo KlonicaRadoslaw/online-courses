@@ -272,7 +272,7 @@ namespace OnlineCourses.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("OnlineCourses.Entities.CategoryItem", b =>
@@ -307,7 +307,7 @@ namespace OnlineCourses.Data.Migrations
 
                     b.HasIndex("MediaTypeId");
 
-                    b.ToTable("CategoryItem");
+                    b.ToTable("CategoryItem", (string)null);
                 });
 
             modelBuilder.Entity("OnlineCourses.Entities.Content", b =>
@@ -338,7 +338,7 @@ namespace OnlineCourses.Data.Migrations
 
                     b.HasIndex("CategoryItemId");
 
-                    b.ToTable("Content");
+                    b.ToTable("Content", (string)null);
                 });
 
             modelBuilder.Entity("OnlineCourses.Entities.MediaType", b =>
@@ -360,7 +360,7 @@ namespace OnlineCourses.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MediaType");
+                    b.ToTable("MediaType", (string)null);
                 });
 
             modelBuilder.Entity("OnlineCourses.Entities.UserCategory", b =>
@@ -384,7 +384,7 @@ namespace OnlineCourses.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserCategory");
+                    b.ToTable("UserCategory", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

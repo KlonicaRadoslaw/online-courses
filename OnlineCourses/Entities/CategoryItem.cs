@@ -16,9 +16,11 @@ namespace OnlineCourses.Entities
         public int CategoryId { get; set; }
         public int MediaTypeId { get; set; }
 
-        [NotMapped]
-        [BindNever]
+        [NotMapped, BindNever]
         public virtual ICollection<SelectListItem>? MediaTypes { get; set; }
         public DateTime DateTimeItemReleased { get; set; }
+
+        [NotMapped]
+        public int ContentId { get; set; }
     }
 }
