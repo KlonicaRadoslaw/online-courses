@@ -22,24 +22,6 @@ namespace OnlineCourses.Areas.Admin.Controllers
             _contentRepository = contentRepository;
         }
 
-        // GET: Admin/Content
-        public async Task<IActionResult> Index()
-        {
-            var content = await _contentRepository.GetAll();
-            return content != null ? View(content) : Problem("Entity set 'ApplicationDbContext.Content' is null.");
-        }
-
-        // GET: Admin/Content/Details/5
-        public async Task<IActionResult> Details(int id)
-        {
-            var content = await _contentRepository.GetById(id);
-            if (content == null)
-            {
-                return NotFound();
-            }
-
-            return View(content);
-        }
 
         // GET: Admin/Content/Create
         public IActionResult Create()
@@ -105,34 +87,6 @@ namespace OnlineCourses.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(content);
-        }
-
-        // GET: Admin/Content/Delete/5
-        public async Task<IActionResult> Delete(int id)
-        {
-            var content = await _contentRepository.GetById(id);
-
-            if (content == null)
-            {
-                return NotFound();
-            }
-
-            return View(content);
-        }
-
-        // POST: Admin/Content/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var content = await _contentRepository.GetById(id);
-
-            if (content != null)
-            {
-                _contentRepository.Delete(content);
-            }
-
-            return RedirectToAction(nameof(Index));
         }
     }
 }
