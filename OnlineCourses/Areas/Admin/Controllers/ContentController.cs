@@ -55,9 +55,17 @@ namespace OnlineCourses.Areas.Admin.Controllers
         }
 
         // GET: Admin/Content/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int categoryItemId, int categoryId)
         {
-            var content = await _contentRepository.GetById(id);
+            if (categoryItemId == 0)
+            {
+                return NotFound();
+            }
+
+            var content = await _contentRepository.GetByCategoryItemId(categoryItemId);
+
+            content.CategoryId = categoryId;
+
             if (content == null)
             {
                 return NotFound();
@@ -70,7 +78,7 @@ namespace OnlineCourses.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,HTMLContent,VideoLink")] Content content)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,HTMLContent,VideoLink,CategoryId")] Content content)
         {
             if (id != content.Id)
             {
@@ -94,7 +102,7 @@ namespace OnlineCourses.Areas.Admin.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), "CategoryItem", new { categoryId = content.CategoryId });
             }
             return View(content);
         }

@@ -36,6 +36,11 @@ namespace OnlineCourses.Repositories
             return await _context.Content.ToListAsync();
         }
 
+        public async Task<Content> GetByCategoryItemId(int categoryItemId)
+        {
+            return await _context.Content.SingleOrDefaultAsync(item => item.CategoryItem.Id == categoryItemId);
+        }
+
         public async Task<Content> GetById(int id)
         {
             return await _context.Content
