@@ -12,7 +12,7 @@ namespace OnlineCourses.Entities
         public string Title { get; set; }
         public string HTMLContent { get; set; }
         public string VideoLink { get; set; }
-        public CategoryItem CategoryItem { get; set; }
+        public CategoryItem? CategoryItem { get; set; }
 
         [NotMapped]
         public int CatItemId { get; set; }

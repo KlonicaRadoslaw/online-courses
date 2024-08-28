@@ -16,17 +16,25 @@ namespace OnlineCourses.Areas.Admin.Controllers
     public class ContentController : Controller
     {
         private readonly IContentRepository _contentRepository;
+        private readonly ICategoryItemRepository _categoryItemRepository;
 
-        public ContentController(IContentRepository contentRepository)
+        public ContentController(IContentRepository contentRepository, ICategoryItemRepository categoryItemRepository)
         {
             _contentRepository = contentRepository;
+            _categoryItemRepository = categoryItemRepository;
         }
 
 
         // GET: Admin/Content/Create
-        public IActionResult Create()
+        public IActionResult Create(int categoryItemId, int categoryId)
         {
-            return View();
+            var content = new Content
+            {
+                CategoryId = categoryId,
+                CatItemId = categoryItemId
+            };
+
+            return View(content);
         }
 
         // POST: Admin/Content/Create
@@ -34,12 +42,14 @@ namespace OnlineCourses.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,HTMLContent,VideoLink")] Content content)
+        public async Task<IActionResult> Create([Bind("Id,Title,HTMLContent,VideoLink,CatItemId,CategoryId")] Content content)
         {
+            content.CategoryItem = await _categoryItemRepository.GetById(content.CatItemId);
             if (ModelState.IsValid)
             {
                 _contentRepository.Add(content);
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction(nameof(Index), "CategoryItem", new { categoryId = content.CategoryId });
             }
             return View(content);
         }
