@@ -7,37 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineCourses.Data;
 using OnlineCourses.Entities;
+using OnlineCourses.Interfaces;
+using OnlineCourses.Repositories;
 
 namespace OnlineCourses.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class MediaTypeController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediaTypeRepository _mediaTypeRepository;
 
-        public MediaTypeController(ApplicationDbContext context)
+        public MediaTypeController(IMediaTypeRepository mediaTypeRepository)
         {
-            _context = context;
+            _mediaTypeRepository = mediaTypeRepository;
         }
 
         // GET: Admin/MediaType
         public async Task<IActionResult> Index()
         {
-              return _context.MediaType != null ? 
-                          View(await _context.MediaType.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.MediaType'  is null.");
+            var mediaTypes = await _mediaTypeRepository.GetAll();
+            return mediaTypes != null ? View(mediaTypes) : Problem("Entity set 'ApplicationDbContext.MediaType' is null.");
         }
 
         // GET: Admin/MediaType/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null || _context.MediaType == null)
-            {
-                return NotFound();
-            }
-
-            var mediaType = await _context.MediaType
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var mediaType = await _mediaTypeRepository.GetById(id);
             if (mediaType == null)
             {
                 return NotFound();
@@ -61,22 +56,16 @@ namespace OnlineCourses.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(mediaType);
-                await _context.SaveChangesAsync();
+                _mediaTypeRepository.Add(mediaType);
                 return RedirectToAction(nameof(Index));
             }
             return View(mediaType);
         }
 
         // GET: Admin/MediaType/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.MediaType == null)
-            {
-                return NotFound();
-            }
-
-            var mediaType = await _context.MediaType.FindAsync(id);
+            var mediaType = await _mediaTypeRepository.GetById(id);
             if (mediaType == null)
             {
                 return NotFound();
@@ -100,12 +89,11 @@ namespace OnlineCourses.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(mediaType);
-                    await _context.SaveChangesAsync();
+                    _mediaTypeRepository.Update(mediaType);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MediaTypeExists(mediaType.Id))
+                    if (!_mediaTypeRepository.DoesExist(mediaType.Id))
                     {
                         return NotFound();
                     }
@@ -120,15 +108,10 @@ namespace OnlineCourses.Areas.Admin.Controllers
         }
 
         // GET: Admin/MediaType/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null || _context.MediaType == null)
-            {
-                return NotFound();
-            }
+            var mediaType = await _mediaTypeRepository.GetById(id);
 
-            var mediaType = await _context.MediaType
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (mediaType == null)
             {
                 return NotFound();
@@ -142,23 +125,14 @@ namespace OnlineCourses.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.MediaType == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.MediaType'  is null.");
-            }
-            var mediaType = await _context.MediaType.FindAsync(id);
+            var mediaType = await _mediaTypeRepository.GetById(id);
+
             if (mediaType != null)
             {
-                _context.MediaType.Remove(mediaType);
+                _mediaTypeRepository.Delete(mediaType);
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool MediaTypeExists(int id)
-        {
-          return (_context.MediaType?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
