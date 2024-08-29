@@ -15,12 +15,16 @@ namespace OnlineCourses.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public int CategoryId { get; set; }
+
+        [Required(ErrorMessage = "Please select a valid item from the '{0}' dropdown list")]
+        [Display(Name = "Media Type")]
         public int MediaTypeId { get; set; }
 
         [NotMapped, BindNever]
         public virtual ICollection<SelectListItem>? MediaTypes { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Release Date")]
         public DateTime DateTimeItemReleased 
         { 
             get 

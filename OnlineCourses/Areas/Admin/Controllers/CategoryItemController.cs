@@ -73,6 +73,10 @@ namespace OnlineCourses.Areas.Admin.Controllers
                 _categoryItemRepository.Add(categoryItem);
                 return RedirectToAction(nameof(Index), new {categoryId  = categoryItem.CategoryId});
             }
+
+            var mediaTypes = await _mediaTypeRepository.GetAll();
+            categoryItem.MediaTypes = mediaTypes.ConvertToSelectList(categoryItem.MediaTypeId);
+
             return View(categoryItem);
         }
 
