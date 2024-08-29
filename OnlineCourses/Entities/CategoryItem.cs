@@ -7,6 +7,7 @@ namespace OnlineCourses.Entities
 {
     public class CategoryItem
     {
+        private DateTime _releaseDate = DateTime.MinValue;
         public int Id { get; set; }
 
         [Required]
@@ -18,7 +19,19 @@ namespace OnlineCourses.Entities
 
         [NotMapped, BindNever]
         public virtual ICollection<SelectListItem>? MediaTypes { get; set; }
-        public DateTime DateTimeItemReleased { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateTimeItemReleased 
+        { 
+            get 
+            {
+                return (_releaseDate == DateTime.MinValue) ? DateTime.Now : _releaseDate;
+            } 
+            set 
+            {
+                _releaseDate = value;
+            } 
+        }
 
         [NotMapped]
         public int ContentId { get; set; }
