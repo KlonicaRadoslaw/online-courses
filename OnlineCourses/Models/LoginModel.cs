@@ -17,8 +17,8 @@ namespace OnlineCourses.Models
         [Display(Name = "Remember Me")]
         public bool RememberMe { get; set; }
 
-        public string LoginInValid { get; set; }
+        public string LoginInValid { get; set; } = string.Empty;
 
-        public string LoginFailedMessage { get; set; }
+        public string LoginFailedMessage { get; set; } = string.Empty;
     }
 }

@@ -11,3 +11,10 @@
 <div class="modal fade" id="UserLoginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <partial name="_UserLoginPartial" />
 </div>
+
+@section Scripts{
+    <script src="~/js/userlogin.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
