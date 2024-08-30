@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineCourses.Entities;
+using OnlineCourses.Interfaces;
 using OnlineCourses.Models;
 
 namespace OnlineCourses.Controllers
@@ -10,11 +11,15 @@ namespace OnlineCourses.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUserAuthRepository _userAuthRepository;
 
-        public UserAuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public UserAuthController(UserManager<ApplicationUser> userManager, 
+                                  SignInManager<ApplicationUser> signInManager,
+                                  IUserAuthRepository userAuthRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _userAuthRepository = userAuthRepository;
         }
 
         [AllowAnonymous]
@@ -86,6 +91,11 @@ namespace OnlineCourses.Controllers
                 return LocalRedirect(returnUrl);
             else
                 return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<bool> UserNameExists(string username)
+        {
+            return await _userAuthRepository.UserNameExists(username);
         }
     }
 }
