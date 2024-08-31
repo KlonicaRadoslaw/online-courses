@@ -8,10 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\BootstrapAlerts.js" />
     <Content Remove="wwwroot\js\DatePicker.js" />
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\BootstrapAlerts.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\DatePicker.js" />
   </ItemGroup>
 
@@ -35,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\js\BootstrapAlerts.js" />
     <None Include="wwwroot\js\DatePicker.js" />
   </ItemGroup>
 

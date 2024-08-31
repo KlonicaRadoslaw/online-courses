@@ -75,7 +75,7 @@ namespace OnlineCourses.Controllers
                     return PartialView("_UserRegistrationPartial", registrationModel);
                 }
 
-                ModelState.AddModelError("", "Registration attempt failed");
+                AddErrorsToModelState(result);
             }
             return PartialView("_UserRegistrationPartial", registrationModel);
         }
@@ -96,6 +96,12 @@ namespace OnlineCourses.Controllers
         public async Task<bool> UserNameExists(string username)
         {
             return await _userAuthRepository.UserNameExists(username);
+        }
+
+        private void AddErrorsToModelState(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error.Description);
         }
     }
 }
