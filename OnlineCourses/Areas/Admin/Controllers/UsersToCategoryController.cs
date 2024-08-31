@@ -39,12 +39,12 @@ namespace OnlineCourses.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveSelectedUser([Bind("CategoryId, UsersSelected")] UsersCategoryListModel usersCategoryListModel)
+        public async Task<IActionResult> SaveSelectedUsers([Bind("CategoryId, UsersSelected")] UsersCategoryListModel usersCategoryListModel)
         {
             var usersSelectedForCategoryToAdd = await _usersToCategoryRepository.GetUsersForCategoryToAdd(usersCategoryListModel);
             var usersSelectedForCategoryToDelete = await _usersToCategoryRepository.GetUsersFromCategoryToDelete(usersCategoryListModel.CategoryId);
 
-            _usersToCategoryRepository.UsersForCategoryAddAndDeleteTransactionAsync(usersSelectedForCategoryToAdd, usersSelectedForCategoryToDelete);
+            await _usersToCategoryRepository.UsersForCategoryAddAndDeleteTransactionAsync(usersSelectedForCategoryToAdd, usersSelectedForCategoryToDelete);
 
             usersCategoryListModel.Users = await _usersToCategoryRepository.GetAllUsers();
 

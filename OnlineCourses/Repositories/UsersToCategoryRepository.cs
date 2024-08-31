@@ -65,13 +65,12 @@ namespace OnlineCourses.Repositories
             return await Task.FromResult(usersForCategoryToDelete);
         }
 
-        public async void UsersForCategoryAddAndDeleteTransactionAsync(List<UserCategory> usersSelectedForCategoryToAdd, List<UserCategory> usersSelectedForCategoryToDelete)
+        public async Task UsersForCategoryAddAndDeleteTransactionAsync(List<UserCategory> usersSelectedForCategoryToAdd, List<UserCategory> usersSelectedForCategoryToDelete)
         {
             using (var dbContextTransaction = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
-
                     _context.RemoveRange(usersSelectedForCategoryToDelete);
                     await _context.SaveChangesAsync();
 
@@ -80,13 +79,13 @@ namespace OnlineCourses.Repositories
                         _context.AddRange(usersSelectedForCategoryToAdd);
                         await _context.SaveChangesAsync();
                     }
+
                     await dbContextTransaction.CommitAsync();
-
                 }
-
                 catch (Exception ex)
                 {
-                    await dbContextTransaction.DisposeAsync();
+                    await dbContextTransaction.RollbackAsync();
+                    throw;
                 }
             }
         }
