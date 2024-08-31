@@ -19,6 +19,19 @@ namespace OnlineCourses.Areas.Admin.Controllers
             _categoryRepository = categoryRepository;
         }
 
+        public async Task<IActionResult> GetUsersForCategory(int categoryId)
+        {
+            var usersCategoryListModel = new UsersCategoryListModel();
+
+            var allUsers = await _usersToCategoryRepository.GetAllUsers();
+            var selectedUsersForCategory = await _usersToCategoryRepository.GetSavedSelectedUsersForCategory(categoryId);
+
+            usersCategoryListModel.Users = allUsers;
+            usersCategoryListModel.UsersSelected = selectedUsersForCategory;
+
+            return PartialView("_UsersListViewPartial", usersCategoryListModel);
+        }
+
         public async Task<IActionResult> Index()
         {
             return View(await _categoryRepository.GetAll());

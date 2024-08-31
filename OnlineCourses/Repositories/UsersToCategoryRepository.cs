@@ -29,9 +29,15 @@ namespace OnlineCourses.Repositories
             return allUsers;
         }
 
-        public Task<List<UserModel>> GetSavedSelectedUsersForCategory(int categoryId)
+        public async Task<List<UserModel>> GetSavedSelectedUsersForCategory(int categoryId)
         {
-            throw new NotImplementedException();
+            var savedSelectedUsersForCategory = await (from usersToCat in _context.UserCategory
+                                                       where usersToCat.CategoryId == categoryId
+                                                       select new UserModel
+                                                       {
+                                                           Id = usersToCat.UserId
+                                                       }).ToListAsync();
+            return savedSelectedUsersForCategory;
         }
 
         public async Task<List<UserCategory>> GetUsersForCategoryToAdd(UsersCategoryListModel usersCategoryListModel)
@@ -59,7 +65,7 @@ namespace OnlineCourses.Repositories
             return await Task.FromResult(usersForCategoryToDelete);
         }
 
-        public async Task UsersForCategoryAddAndDeleteTransactionAsync(List<UserCategory> usersSelectedForCategoryToAdd, List<UserCategory> usersSelectedForCategoryToDelete)
+        public async void UsersForCategoryAddAndDeleteTransactionAsync(List<UserCategory> usersSelectedForCategoryToAdd, List<UserCategory> usersSelectedForCategoryToDelete)
         {
             using (var dbContextTransaction = await _context.Database.BeginTransactionAsync())
             {
