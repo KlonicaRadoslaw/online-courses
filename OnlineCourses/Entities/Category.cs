@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OnlineCourses.Interfaces;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineCourses.Entities
 {
-    public class Category
+    public class Category : IPrimaryProperties
     {
         public int Id { get; set; }
 
