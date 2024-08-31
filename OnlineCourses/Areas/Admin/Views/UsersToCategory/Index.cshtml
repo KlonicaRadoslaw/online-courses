@@ -1,4 +1,7 @@
-﻿<form id="MembersToCategory" asp-action="Index">
+﻿@model IEnumerable<OnlineCourses.Entities.Category>
+@using OnlineCourses.Extensions
+
+<form id="MembersToCategory" asp-action="Index">
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
