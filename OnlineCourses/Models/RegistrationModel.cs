@@ -34,12 +34,12 @@ namespace OnlineCourses.Models
         public string Address2 { get; set; }
 
         [Required]
-        [RegularExpression("^[a-zA-Z]{1,2}[0-9][0-9A-Za-z]{0,1} {0,1}[0-9][A-Za-z]{2}$")]
+        [RegularExpression("^([_0-9][0-9]|[0-9][_0-9])-([_0-9]{2}[0-9]|[_0-9][0-9][_0-9]|[0-9][_0-9]{2})$")]
         [Display(Name = "Post Code")]
         public string PostCode { get; set; }
 
         [Required]
-        [RegularExpression(@"(\s*\(?0\d{4}\)?\s*\d{6}\s*)|(\s*\(?0\d{3}\)?\s*\d{3}\s*\d{4}\s*)")]
+        [RegularExpression(@"^\d{9}$", ErrorMessage = "Phone number must contain exactly 9 digits.")]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
         public bool AcceptUserAgreement { get; set; }
