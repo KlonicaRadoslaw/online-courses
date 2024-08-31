@@ -5,9 +5,10 @@ namespace OnlineCourses.Interfaces
 {
     public interface IUsersToCategoryRepository
     {
-        Task<List<UserModel>> GetAll();
+        Task<List<UserModel>> GetAllUsers();
         Task<List<UserCategory>> GetUsersForCategoryToAdd(UsersCategoryListModel usersCategoryListModel);
         Task<List<UserCategory>> GetUsersFromCategoryToDelete(int categoryId);
         Task<List<UserModel>> GetSavedSelectedUsersForCategory(int categoryId);
+        void UsersForCategoryAddAndDeleteTransactionAsync(List<UserCategory> usersSelectedForCategoryToAdd, List<UserCategory> usersSelectedForCategoryToDelete);
     }
 }

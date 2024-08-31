@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OnlineCourses.Interfaces;
+using OnlineCourses.Models;
 
 namespace OnlineCourses.Areas.Admin.Controllers
 {
@@ -7,9 +9,33 @@ namespace OnlineCourses.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class UsersToCategoryController : Controller
     {
-        public IActionResult Index()
+        private readonly IUsersToCategoryRepository _usersToCategoryRepository;
+        private readonly ICategoryRepository _categoryRepository;
+
+        public UsersToCategoryController(IUsersToCategoryRepository usersToCategoryRepository,
+                                         ICategoryRepository categoryRepository)
         {
-            return View();
+            _usersToCategoryRepository = usersToCategoryRepository;
+            _categoryRepository = categoryRepository;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            return View(await _categoryRepository.GetAll());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveSelectedUser([Bind("CategoryId, UsersSelected")] UsersCategoryListModel usersCategoryListModel)
+        {
+            var usersSelectedForCategoryToAdd = await _usersToCategoryRepository.GetUsersForCategoryToAdd(usersCategoryListModel);
+            var usersSelectedForCategoryToDelete = await _usersToCategoryRepository.GetUsersFromCategoryToDelete(usersCategoryListModel.CategoryId);
+
+            _usersToCategoryRepository.UsersForCategoryAddAndDeleteTransactionAsync(usersSelectedForCategoryToAdd, usersSelectedForCategoryToDelete);
+
+            usersCategoryListModel.Users = await _usersToCategoryRepository.GetAllUsers();
+
+            return PartialView("_UsersListViewPartial", usersCategoryListModel);
         }
     }
 }
