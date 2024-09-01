@@ -13,6 +13,7 @@ builder.Services.AddScoped<IMediaTypeRepository, MediaTypeRepository>();
 builder.Services.AddScoped<IContentRepository, ContentRepository>();
 builder.Services.AddScoped<IUserAuthRepository, UserAuthRepository>();
 builder.Services.AddScoped<IUsersToCategoryRepository, UsersToCategoryRepository>();
+builder.Services.AddScoped<IHomeRepository, HomeRepository>();
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
