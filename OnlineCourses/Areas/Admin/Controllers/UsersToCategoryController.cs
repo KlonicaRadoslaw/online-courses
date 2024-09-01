@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OnlineCourses.Entities;
 using OnlineCourses.Interfaces;
 using OnlineCourses.Models;
 
@@ -41,7 +42,11 @@ namespace OnlineCourses.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveSelectedUsers([Bind("CategoryId, UsersSelected")] UsersCategoryListModel usersCategoryListModel)
         {
-            var usersSelectedForCategoryToAdd = await _usersToCategoryRepository.GetUsersForCategoryToAdd(usersCategoryListModel);
+            List<UserCategory> usersSelectedForCategoryToAdd = null;
+
+            if (usersCategoryListModel.UsersSelected != null)
+                usersSelectedForCategoryToAdd = await _usersToCategoryRepository.GetUsersForCategoryToAdd(usersCategoryListModel);
+
             var usersSelectedForCategoryToDelete = await _usersToCategoryRepository.GetUsersFromCategoryToDelete(usersCategoryListModel.CategoryId);
 
             await _usersToCategoryRepository.UsersForCategoryAddAndDeleteTransactionAsync(usersSelectedForCategoryToAdd, usersSelectedForCategoryToDelete);
