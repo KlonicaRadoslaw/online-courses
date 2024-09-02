@@ -47,6 +47,18 @@ namespace OnlineCourses.Repositories
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
+        public async Task<Content> GetContentByCategoryItemId(int categoryItemId)
+        {
+            return await (from item in _context.Content
+                          where item.CategoryItem.Id == categoryItemId
+                          select new Content
+                          {
+                              Title = item.Title,
+                              VideoLink = item.VideoLink,
+                              HTMLContent = item.HTMLContent
+                          }).FirstOrDefaultAsync();
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();
