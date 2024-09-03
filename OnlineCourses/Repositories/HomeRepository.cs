@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineCourses.Data;
+using OnlineCourses.Entities;
 using OnlineCourses.Interfaces;
 using OnlineCourses.Models;
 
@@ -12,6 +13,23 @@ namespace OnlineCourses.Repositories
         public HomeRepository(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<List<Category>> GetCategoriesThatHaveContent()
+        {
+            var categoriesWithContent = await (from category in _context.Category
+                                               join categoryItem in _context.CategoryItem
+                                               on category.Id equals categoryItem.CategoryId
+                                               join content in _context.Content
+                                               on categoryItem.Id equals content.CategoryItem.Id
+                                               select new Category
+                                               {
+                                                   Id = category.Id,
+                                                   Title = category.Title,
+                                                   Description = category.Description,
+                                                   ThumbnailImagePath = category.ThumbnailImagePath
+                                               }).Distinct().ToListAsync();
+            return categoriesWithContent;
         }
 
         public async Task<IEnumerable<CategoryItemDetailsModel>> GetCategoryItemDetailsForUser(string userId)

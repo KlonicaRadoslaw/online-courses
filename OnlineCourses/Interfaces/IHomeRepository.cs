@@ -1,4 +1,5 @@
-﻿using OnlineCourses.Models;
+﻿using OnlineCourses.Entities;
+using OnlineCourses.Models;
 
 namespace OnlineCourses.Interfaces
 {
@@ -6,5 +7,6 @@ namespace OnlineCourses.Interfaces
     {
         IEnumerable<GroupedCategoryItemsByCategoryModel> GetGroupedCategoryItemsByCategory(IEnumerable<CategoryItemDetailsModel> categoryItemDetailsModels);
         Task<IEnumerable<CategoryItemDetailsModel>> GetCategoryItemDetailsForUser(string userId);
+        Task<List<Category>> GetCategoriesThatHaveContent();
     }
 }

@@ -44,6 +44,12 @@ namespace OnlineCourses.Controllers
                     categoryDetailsModel.GroupedCategoryItemsByCategoryModels = groupedCategoryItemsByCategoryModels;
                 }
             }
+            else
+            {
+                var categories = await _homeRepository.GetCategoriesThatHaveContent();
+
+                categoryDetailsModel.Categories = categories;
+            }
 
             return View(categoryDetailsModel);
         }
