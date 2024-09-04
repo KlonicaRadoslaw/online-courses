@@ -15,6 +15,7 @@ builder.Services.AddScoped<IUserAuthRepository, UserAuthRepository>();
 builder.Services.AddScoped<IUsersToCategoryRepository, UsersToCategoryRepository>();
 builder.Services.AddScoped<IHomeRepository, HomeRepository>();
 builder.Services.AddScoped<ICategoriesToUserRepository, CategoriesToUserRepository>();
+builder.Services.AddScoped<IDataFunctions, DataFunctions>();
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

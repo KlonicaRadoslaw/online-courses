@@ -9,6 +9,5 @@ namespace OnlineCourses.Interfaces
         Task<List<UserCategory>> GetUsersForCategoryToAdd(UsersCategoryListModel usersCategoryListModel);
         Task<List<UserCategory>> GetUsersFromCategoryToDelete(int categoryId);
         Task<List<UserModel>> GetSavedSelectedUsersForCategory(int categoryId);
-        Task UsersForCategoryAddAndDeleteTransactionAsync(List<UserCategory> usersSelectedForCategoryToAdd, List<UserCategory> usersSelectedForCategoryToDelete);
     }
 }

@@ -12,12 +12,15 @@ namespace OnlineCourses.Areas.Admin.Controllers
     {
         private readonly IUsersToCategoryRepository _usersToCategoryRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IDataFunctions _dataFunctions;
 
         public UsersToCategoryController(IUsersToCategoryRepository usersToCategoryRepository,
-                                         ICategoryRepository categoryRepository)
+                                         ICategoryRepository categoryRepository,
+                                         IDataFunctions dataFunctions)
         {
             _usersToCategoryRepository = usersToCategoryRepository;
             _categoryRepository = categoryRepository;
+            _dataFunctions = dataFunctions;
         }
 
         public async Task<IActionResult> GetUsersForCategory(int categoryId)
@@ -49,7 +52,7 @@ namespace OnlineCourses.Areas.Admin.Controllers
 
             var usersSelectedForCategoryToDelete = await _usersToCategoryRepository.GetUsersFromCategoryToDelete(usersCategoryListModel.CategoryId);
 
-            await _usersToCategoryRepository.UsersForCategoryAddAndDeleteTransactionAsync(usersSelectedForCategoryToAdd, usersSelectedForCategoryToDelete);
+            await _dataFunctions.UsersForCategoryAddAndDeleteTransactionAsync(usersSelectedForCategoryToAdd, usersSelectedForCategoryToDelete);
 
             usersCategoryListModel.Users = await _usersToCategoryRepository.GetAllUsers();
 
