@@ -72,6 +72,11 @@ namespace OnlineCourses.Controllers
                     
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
+                    if(registrationModel.CategoryId != 0)
+                    {
+                        await _userAuthRepository.AddCategoryToUser(user.Id, registrationModel.CategoryId);
+                    }
+
                     return PartialView("_UserRegistrationPartial", registrationModel);
                 }
 
