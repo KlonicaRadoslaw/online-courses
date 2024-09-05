@@ -44,5 +44,6 @@ namespace OnlineCourses.Models
         public string PhoneNumber { get; set; }
         public bool AcceptUserAgreement { get; set; }
         public string RegistrationInValid { get; set; } = string.Empty;
+        public int CategoryId { get; set; }
     }
 }
