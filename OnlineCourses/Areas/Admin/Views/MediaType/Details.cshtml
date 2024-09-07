@@ -1,30 +1,43 @@
 ﻿@model OnlineCourses.Entities.MediaType
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Media Type Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>MediaType</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ThumbnailImagePath)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ThumbnailImagePath)
-        </dd>
-    </dl>
+<!-- Page Title -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1 class="mb-0"><i class="fas fa-info-circle"></i> Media Type Details</h1>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<!-- Details Container -->
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="fas fa-video"></i> MediaType</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ThumbnailImagePath)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.ThumbnailImagePath)
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer text-end">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary ms-2">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
 </div>
