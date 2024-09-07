@@ -1,31 +1,39 @@
 ﻿@model OnlineCourses.Entities.Content
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Content";
 }
 
-<h1>Edit</h1>
+<!-- Page Title -->
+<div class="row mb-4">
+    <div class="col-md-12 d-flex justify-content-between align-items-center">
+        <h1 class="mb-0"><i class="fas fa-edit"></i> Edit Content</h1>
+    </div>
+</div>
 
-<h4>Content</h4>
-<hr />
-<div class="row">
-    <div class="col-md-10">
+<!-- Edit Content Form Card -->
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="fas fa-pencil-alt"></i> Edit Content</h4>
+    </div>
+    <div class="card-body">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CategoryId" />
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="form-group mb-3">
+                <label asp-for="Title" class="form-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="HTMLContent" class="control-label"></label>
+            <div class="form-group mb-3">
+                <label asp-for="HTMLContent" class="form-label"></label>
                 <textarea asp-for="HTMLContent" rows="10" class="form-control"></textarea>
                 <span asp-validation-for="HTMLContent" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="VideoLink" class="control-label"></label>
+            <div class="form-group mb-3">
+                <label asp-for="VideoLink" class="form-label"></label>
                 <input asp-for="VideoLink" class="form-control" />
                 <span asp-validation-for="VideoLink" class="text-danger"></span>
             </div>
@@ -34,12 +42,15 @@
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-controller="CategoryItem" asp-action="Index" asp-route-categoryId="@Model.CategoryId">Back to List</a>
+    <div class="card-footer">
+        <a asp-controller="CategoryItem" asp-action="Index" asp-route-categoryId="@Model.CategoryId" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
