@@ -1,55 +1,69 @@
 ﻿@model IEnumerable<OnlineCourses.Entities.CategoryItem>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Category Items";
 }
 
-<h1>Index</h1>
-
-<p>
-    <partial name="_CreateButtonPartial" model="@ViewBag.CategoryId" />
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateTimeItemReleased)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<!-- Page Title -->
+<div class="row mb-4">
+    <div class="col-md-12 d-flex justify-content-between align-items-center">
+        <h1 class="mb-0">Category Items</h1>
+        <partial name="_CreateButtonPartial" model="@ViewBag.CategoryId" />
+    </div>
+</div>
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">
+            <i class="fas fa-th-list"></i> Category Items List
+        </h4>
+    </div>
+<div class="card-body">
+    <table class="table table-hover">
+        <thead class="thead-light">
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateTimeItemReleased)
-                </td>
-                <td>
-                    <partial name="_RUDButtonsPartial" model="@item.Id" />
-
-                    @if (item.ContentId == 0)
-                    {
-                        <a asp-controller="Content" asp-action="Create" asp-route-categoryItemId="@item.Id" asp-route-categoryId="@item.CategoryId" class="btn btn-outline-secondary btn-sm">Add Content</a>
-                    }
-                    else
-                    {
-                <a asp-controller="Content" asp-action="Edit" asp-route-categoryItemId="@item.Id" asp-route-categoryId="@item.CategoryId" class="btn btn-outline-secondary btn-sm">Edit Content</a>
-                    }
-                </td>
+                <th>
+                    <i class="fas fa-tag"></i>@Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    <i class="fas fa-align-left"></i>@Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    <i class="fas fa-calendar-day"></i>@Html.DisplayNameFor(model => model.DateTimeItemReleased)
+                </th>
+                <th scope="col"><i class="fas fa-cogs"></i> Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <span class="text-dark">@Html.DisplayFor(modelItem => item.Title)</span>
+                    </td>
+                    <td>
+                        <span class="text-muted">@Html.DisplayFor(modelItem => item.Description)</span>
+                    </td>
+                    <td>
+                        <span>@Html.DisplayFor(modelItem => item.DateTimeItemReleased)</span>
+                    </td>
+                    <td>
+                        <partial name="_RUDButtonsPartial" model="@item.Id" />
+
+                        @if (item.ContentId == 0)
+                        {
+                            <a asp-controller="Content" asp-action="Create" asp-route-categoryItemId="@item.Id" asp-route-categoryId="@item.CategoryId" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-plus"></i> Add Content
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Content" asp-action="Edit" asp-route-categoryItemId="@item.Id" asp-route-categoryId="@item.CategoryId" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-edit"></i> Edit Content
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
