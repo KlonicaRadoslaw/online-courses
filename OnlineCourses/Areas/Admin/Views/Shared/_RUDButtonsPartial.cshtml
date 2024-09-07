@@ -1,5 +1,13 @@
 ﻿@model int
 
-<a asp-action="Edit" asp-route-id="@Model" class="text-info m-2"><i class="fas fa-edit"></i></a> 
-<a asp-action="Details" asp-route-id="@Model" class="text-dark m-2"><i class="fas fa-table"></i></a> 
-<a asp-action="Delete" asp-route-id="@Model" class="text-danger m-2"><i class="fas fa-trash"></i></a> 
+<div class="d-flex justify-content-start">
+    <a asp-action="Edit" asp-route-id="@Model" class="text-info mx-2" title="Edit">
+        <i class="fas fa-edit"></i>
+    </a>
+    <a asp-action="Details" asp-route-id="@Model" class="text-dark mx-2" title="Details">
+        <i class="fas fa-table"></i>
+    </a>
+    <a asp-action="Delete" asp-route-id="@Model" class="text-danger mx-2" title="Delete">
+        <i class="fas fa-trash"></i>
+    </a>
+</div>

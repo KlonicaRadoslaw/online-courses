@@ -1,34 +1,35 @@
 ﻿@using OnlineCourses.Comparers
 @model UsersCategoryListModel
 
+<!-- Users Table -->
 <table class="table table-hover">
-    <thead>
+    <thead class="table-light">
         <tr>
-            <th></th>
+            <th style="width: 5%"></th>
             <th>First Name</th>
             <th>Last Name</th>
         </tr>
     </thead>
     <tbody>
-        @if (Model.Users != null)
+        @if (Model.Users != null && Model.Users.Any())
         {
             @foreach (var user in Model.Users)
             {
                 <tr>
-                    <td style="text-align:center">
-                        @if (Model.UsersSelected != null && Model.UsersSelected.Contains(user, new CompareUsers()))
-                        {
-                            <input type="checkbox" id="UsersSelected" class="form-check-input" name="UsersSelected" checked value="@user.Id" />
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="UsersSelected" class="form-check-input" name="UsersSelected" value="@user.Id" />
-                        }
+                    <td class="text-center">
+                        <input type="checkbox" class="form-check-input" name="UsersSelected" value="@user.Id"
+                        @(Model.UsersSelected != null && Model.UsersSelected.Contains(user, new CompareUsers()) ? "checked" : "") />
                     </td>
                     <td>@user.FirstName</td>
                     <td>@user.LastName</td>
                 </tr>
             }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted">No users available</td>
+            </tr>
         }
     </tbody>
 </table>
